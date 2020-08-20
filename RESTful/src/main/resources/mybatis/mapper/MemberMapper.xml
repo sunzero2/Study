@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member">
+	<resultMap type="member" id="memberMap">
+		<result column="mem_id" property="memId"/>
+		<result column="mem_pw" property="memPw"/>
+	</resultMap>
+	
+	<insert id="createMember">
+		insert into rest_member values(#{memId}, #{memPw})
+	</insert>
+	
+	<select id="readMember" resultMap="memberMap">
+		select * from rest_member where mem_id=#{memId} and mem_pw=#{memPw}
+	</select>
+	
+	<update id="updateMember">
+		update rest_member set mem_pw=#{memPw} where mem_id=#{memId}
+	</update>
+	
+	<delete id="deleteMember">
+		delete from rest_member where mem_id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>MyPage | RESTful API Study</title>
+</head>
+<body>
+	<h1>MyPage</h1>
+	<h3>ID : </h3>
+	<p th:text="${session.login.memId}"></p>
+	
+	<button onclick="openPasswordChangeBox();">Password Change</button>
+	<div style="display: none;">
+		<h3>현재 비밀번호</h3>
+		<input type="password">
+		<h3>변경할 비밀번호</h3>
+		<input type="password" id="changePassword"/>
+		<button th:onclick="changePassword();">변경하기</button>
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		function openPasswordChangeBox() {
+			let div = document.querySelector("div");
+			div.style.display = "block";
+		}
+		
+		function changePassword() {
+			let id = '[[${session.login.memId}]]';
+			let pw = document.getElementById("changePassword");
+			alert(pw);
+			
+			$.ajax({
+				url: "/members/" + id,
+				type: "PUT",
+				data: {
+					"pw": pw.value
+				},
+				success: function(v) {
+					alert(v);
+				}
+			})
+		}
+	</script>
+</body>
+</html>

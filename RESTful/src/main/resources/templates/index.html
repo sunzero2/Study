@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" >
+<title>Welcome to RESTful API Study</title>
+</head>
+<body>
+	<h1>RESTful API Study</h1>
+	<a href="/signup">회원가입</a>
+	<a href="/login">로그인</a>
+	<a th:if="${session.login != null}" href="/mypage">마이페이지</a>
+	<button th:if="${session.login != null}" th:onclick="check([[${session.login.memId}]]);">회원탈퇴</button>
+	
+	<script>
+		function check(id) {
+			if(confirm("회원탈퇴하시겠습니까?")) {
+				
+				let request = new XMLHttpRequest();
+				request.open('DELETE', '/members/' + id, true);
+				
+				request.onload = function() {
+					if(this.status >= 200 && this.status < 400) {
+						let response = this.response;
+						alert(response);
+					} else {
+						alert("실패!");
+					}
+				}
+				
+				request.send();
+			}
+		}
+	</script>
+</body>
+</html>
