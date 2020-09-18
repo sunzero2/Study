@@ -3,6 +3,7 @@ package com.example.batch_test.job;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
@@ -35,7 +36,8 @@ public class SimpleJobConfiguration {
         // 인수로 전달하는 name은 Job의 이름이 된다.
         return jobBuilderFactory.get("simpleJob")
                 // Step을 실행한다.
-                .start(simpleStep1("2020-09-17"))
+                .start(simpleStep3())
+                .next(simpleStep1("2020-09-17"))
                 .build();
     }
 
@@ -44,8 +46,9 @@ public class SimpleJobConfiguration {
     // JobParameter : Spring Batch에서는 외부 혹은 내부에서 파라미터를 받아 여러 Batch 컴포넌트에서 사용할 수 있도록 지원
     //                항상 Spring Batch 전용 Scope를 선언해야 함 (@StepScope, @JobScope)
     //                사용할 수 있는 타입 : Double, Long, Date, String
+    //                @Value를 통해서 생성 가능 -> @StepScope, @JobScope Bean을 생성할 때만 JobParameter가 생성된다.
     // JobScope & StepScope
-    // @JobScope : jobParameters, jobExecutionContext을 SpEL로 사용 가능
+    // @JobScope : jobParameters, jobExecutionContext를 SpEL로 사용 가능
     //             Step 선언문에서 사용 가능
     //             지정된 Job의 실행시점에 해당 컴포넌트를 Bean으로 생성
     // @StepScope : jobParameters, jobExecutionContext, stepExecutionContext 등을 SpEL로 사용가능
@@ -71,5 +74,14 @@ public class SimpleJobConfiguration {
                     log.info(">>>>> This is Step2");
                     return RepeatStatus.FINISHED;
                 })).build();
+    }
+
+    private final SimpleJobTasklet tasklet;
+
+    public Step simpleStep3() {
+        log.info(">>>>>>> definition simpleStep3");
+        return stepBuilderFactory.get("simpleStep3")
+                .tasklet(tasklet)
+                .build();
     }
 }
