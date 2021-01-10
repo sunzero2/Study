@@ -4,7 +4,10 @@ class Subject extends Component {
   render() {
     return (
       <header>
-        <h1><a href="/">{this.props.title}</a></h1>
+        <h1><a onClick={(e) => {
+          e.preventDefault();
+          this.props.onChangePage();
+        }}href="/">{this.props.title}</a></h1>
         {this.props.sub}
       </header>
     )
