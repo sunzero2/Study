@@ -11,9 +11,13 @@ import java.util.List;
 public class JsoupTest {
     public static void main(String[] args) throws IOException {
         // 1. return Connection.Response
-        Connection.Response testUrl = getUrlConnectionResponse("https://www.naver.com");
-        List<String> elements = htmlParser(testUrl);
+//        Connection.Response testUrl = getUrlConnectionResponse("https://www.naver.com");
+//        List<String> elements = htmlParser(testUrl);
+//        System.out.println(testUrl.url().toString());
 //        System.out.println(elements);
+
+        MonitoringTest test = new MonitoringTest();
+        test.monitoring();
     }
 
     public static Connection.Response getUrlConnectionResponse(String url) throws IOException {
