@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -51,11 +52,17 @@ public class MonitoringTest {
     }
 
     private List<String> getUrlByApi() {
+        // 도메인 주소 물어보기
         List<String> urls = new ArrayList<>();
-        urls.add("https://google.com");
-        urls.add("https://naver.com");
-        urls.add("https://youtube.com");
-        // DB 저장 코드 추가하기 (URL) Monitoring에 안담아도 됨.
+        String testJson = "";
+
+        Gson gson = new Gson();
+        HashMap<String, Object> json = gson.fromJson(testJson, HashMap.class);
+        List<Map<String, String>> buckets = (List<Map<String, String>>) result.get("buckets");
+        for (Map<String, String> bucket : buckets) {
+            urls.add(bucket.get("key"));
+        }
+
         return urls;
     }
 
