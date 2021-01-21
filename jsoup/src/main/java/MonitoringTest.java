@@ -24,8 +24,8 @@ public class MonitoringTest {
         // status code가 < 200 > 400인가? 맞으면 4
         // 4. 에러 발생 시 호출하는 API 호출함
         // 5. 데이터베이스에 데이터 삽입하기
+        int errorCnt = 0;
         try {
-            List<Monitoring> monitorings = new ArrayList<>();
             List<String> urls = getUrlByApi();
             for (String url : urls) {
                 Connection.Response response = getConnectionResponse(url);
@@ -34,20 +34,21 @@ public class MonitoringTest {
 
                     for (String link : links) {
                         Connection.Response _response = getConnectionResponse(link);
-                        Monitoring monitoring = new Monitoring(link, _response.statusCode(), _response.statusMessage(), new Date(), _response.parse().tagName(), url);
-                        monitorings.add(monitoring);
                         if (_response.statusCode() >= 400) {
                             callErrorApi();
+                            errorCnt++;
                         }
                     }
                 } else {
                     callErrorApi();
+                    errorCnt++;
                 }
             }
-
-            insertTestResponse(monitorings);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        } finally {
+            // api 오류 count DB insert
+            insertErrorCount(errorCnt);
         }
     }
 
@@ -58,7 +59,7 @@ public class MonitoringTest {
 
         Gson gson = new Gson();
         HashMap<String, Object> json = gson.fromJson(testJson, HashMap.class);
-        List<Map<String, String>> buckets = (List<Map<String, String>>) result.get("buckets");
+        List<Map<String, String>> buckets = (List<Map<String, String>>) json.get("buckets");
         for (Map<String, String> bucket : buckets) {
             urls.add(bucket.get("key"));
         }
@@ -100,9 +101,7 @@ public class MonitoringTest {
         LOG.info("Call Error API");
     }
 
-    private void insertTestResponse(List<Monitoring> monitorings) {
-        for (Monitoring monitoring : monitorings) {
-            // Response 테이블에 넣는 메서드
-        }
-    }
+    private void insertErrorCount(int errorCnt) {
+        // 오류 횟수 insert 메서드
+   }
 }
